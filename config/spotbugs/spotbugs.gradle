@@ -1,0 +1,31 @@
+spotbugs {
+    toolVersion = "${spotbugsToolsVersion}"
+    ignoreFailures = false
+    showStackTraces = true
+    showProgress = true
+    effort = 'default'
+    reportLevel = 'default'
+    visitors = ['FindSqlInjection', 'SwitchFallthrough']
+    omitVisitors = ['FindNonShortCircuit']
+    reportsDir = file("$buildDir/reports/spotbugs")
+    excludeFilter = file("$rootDir/config/spotbugs/spotbugs-exclude.xml")
+}
+
+spotbugsMain {
+    reports {
+        html {
+            required = true
+            outputLocation = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+spotbugsTest {
+    reports {
+        html {
+            required = true
+            outputLocation = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}

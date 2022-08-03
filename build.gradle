@@ -1,0 +1,64 @@
+plugins {
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyManagementPluginVersion}"
+    id 'java'
+    id "org.owasp.dependencycheck" version "${dependencyCheckPluginVersion}"
+    id "com.github.spotbugs" version "${spotbugsPluginVersion}"
+    id 'checkstyle'
+    id "org.openapi.generator" version "${openApiGeneratorVersion}"
+    id 'jacoco'
+}
+
+apply from: 'config/openapi/openapi.gradle'
+apply from: 'config/checkstyle/checkstyle.gradle'
+apply from: 'config/owasp/dependencycheck.gradle'
+apply from: 'config/jacoco/jacoco.gradle'
+apply from: 'config/spotbugs/spotbugs.gradle'
+
+group = 'au.com.belong'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = "${javaVersion}" as Object
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "${springCloudVersion}")
+}
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation "org.springdoc:springdoc-openapi-ui:${openApiUIVersion}"
+    implementation 'com.h2database:h2'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    compileOnly 'org.projectlombok:lombok'
+    implementation "org.apache.httpcomponents:httpclient:${httpClientVersion}"
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+

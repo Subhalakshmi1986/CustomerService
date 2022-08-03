@@ -1,0 +1,6 @@
+dependencyCheck{
+    cveValidForHours = 4
+    failBuildOnCVSS = 0
+    suppressionFile = "${rootDir}/config/owasp/cve-exclude.xml"
+}
+check.finalizedBy(dependencyCheckAnalyze)

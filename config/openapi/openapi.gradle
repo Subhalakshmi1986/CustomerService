@@ -1,0 +1,24 @@
+def spec = "$rootDir/config/openapi/customer-openapi.yaml" as Object
+def generatedSourcesDir = "$buildDir/generated/openapi" as Object
+
+openApiGenerate {
+    generatorName.set("spring")
+    inputSpec.set(spec)
+    outputDir.set(generatedSourcesDir)
+    apiPackage.set("au.com.belong.customerservice.api")
+    invokerPackage.set("au.com.belong.customerservice")
+    modelPackage.set("au.com.belong.customerservice.api.models")
+    configOptions.set([
+            "performBeanValidation": "true",
+            "dateLibrary"          : "java8",
+            "openApiNullable"      : "false"
+    ]
+    )
+    globalProperties = [
+            "modelTests": "false",
+            "models"    : ""
+
+    ]
+}
+sourceSets.main.java.srcDirs = ['build/generated/openapi/src/main/java', 'src/main/java']
+compileJava.dependsOn tasks.openApiGenerate

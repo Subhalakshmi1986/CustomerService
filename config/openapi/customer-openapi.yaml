@@ -1,0 +1,196 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is a sample customer server.  You can find
+    out more about Swagger at
+    [http://swagger.io](http://swagger.io) or on
+    [irc.freenode.net, #swagger](http://swagger.io/irc/).
+  version: "1.0.0"
+  title: Customer Phonenumber API
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Subhalakshmi1986/Customer/1.0.0
+  - url: 'https://petstore.swagger.io/v2'
+tags:
+  - name: Customer
+    description: Everything about your Customers
+    externalDocs:
+      description: Find out more
+      url: 'http://swagger.io'
+  - name: Phonenumber
+    description: Access to Customer phonenumber
+paths:
+  '/customers/{customerId}/phonenumbers':
+    get:
+      tags:
+        - Customer
+      summary: Find phonenumbers by customerId
+      description: Get []
+      operationId: getPhonenumbersByCustomerId
+      parameters:
+        - name: customerId
+          in: path
+          description: unique identifier of customer to return phonenumbers
+          required: true
+          schema:
+            $ref: '#/components/schemas/CustomerId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Phonenumber'
+        '400':
+          description: Invalid Customer Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceError'
+        '404':
+          description: customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceError'
+  '/phonenumbers':
+    get:
+      tags:
+        - Phonenumber
+      summary: Find all phonenumbers
+      description: Find all phonenumbers
+      operationId: getPhonenumbers
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Phonenumber'
+  '/phonenumbers/{phonenumberId}':
+    get:
+      tags:
+        - Phonenumber
+      summary: Find a single phonenumber
+      description: Returns a single phonenumber
+      operationId: getPhonenumbersById
+      parameters:
+        - name: phonenumberId
+          in: path
+          description: phonenumberId of phonenumber to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/PhonenumberId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Phonenumber'
+        '400':
+          description: Invalid phonenumber
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceError'
+        '404':
+          description: phonenumber not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceError'
+    patch:
+      tags:
+        - Phonenumber
+      summary: activate or deactivate a phonenumber
+      operationId: activatePhonenumberById
+      parameters:
+        - name: phonenumberId
+          in: path
+          description: phonenumber of the customer to update
+          required: true
+          schema:
+            $ref: '#/components/schemas/PhonenumberId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Phonenumber'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Phonenumber'
+        '400':
+          description: Invalid phonenumber supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceError'
+        '404':
+          description: phonenumber not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceError'
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          format: int64
+        Phonenumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phonenumber'
+    Phonenumber:
+      type: object
+      properties:
+        phonenumberId:
+          $ref: '#/components/schemas/PhonenumberId'
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+      description: Phonenumber of customer
+    PhonenumberId:
+      description: unique phonenumber of customer
+      type: string
+      pattern: '^\d{9}$'
+      readOnly: true
+    CustomerId:
+      description: unique id of customer
+      type: integer
+      format: int64
+      minimum: 1
+      exclusiveMinimum: true
+    ServiceError:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        detail:
+          type: string
+      description: Error Response

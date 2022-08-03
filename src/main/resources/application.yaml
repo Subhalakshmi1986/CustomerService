@@ -1,0 +1,49 @@
+spring:
+  sleuth:
+    baggage:
+      local-fields:
+        - customer-id
+        - phonenumber-id
+      tag-fields:
+        - customer-id
+        - phonenumber-id
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        connection: h2
+        validator:
+          apply_to_ddl: false
+        format_sql: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  datasource:
+    driverClassName: org.h2.Driver
+    password: password
+    username: sa
+    url: jdbc:h2:mem:belongDB
+  h2:
+    console:
+      path: /h2-console
+      enabled: false
+management:
+  endpoint:
+    health:
+      group:
+        customhealth:
+          show-components: always
+          include: diskSpace,ping
+          show-details: always
+server:
+  error:
+    include-stacktrace: never
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-},%X{customer-id:-},%X{phonenumber-id:-}]"
+  level:
+    root: WARN
+    au:
+      com:
+        belong: TRACE
